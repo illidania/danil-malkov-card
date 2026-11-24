@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LinkType {
+  GITHUB
+  LINKEDIN
+  TELEGRAM
+  EMAIL
+  WEBSITE
+}
+
+enum SkillCategory {
+  LANGUAGES
+  FRONTEND
+  BACKEND
+  DATABASES
+  TOOLING
+  PRACTICES
+}
+
+model Profile {
+  id          Int      @id @default(autoincrement())
+  /// Человекочитаемый идентификатор: позволяет хранить несколько визиток
+  slug        String   @unique
+  name        String
+  headline    String
+  description String
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  links       ProfileLink[]
+  skills      Skill[]
+  experiences Experience[]
+  projects    Project[]
+}
+
+model ProfileLink {
+  id        Int      @id @default(autoincrement())
+  profileId Int
+  type      LinkType
+  label     String
+  url       String
+  sortOrder Int      @default(0)
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, type])
+}
+
+model Skill {
+  id        Int           @id @default(autoincrement())
+  profileId Int
+  name      String
+  category  SkillCategory
+  sortOrder Int           @default(0)
+
+  profile     Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  experiences Experience[]
+  projects    Project[]
+
+  @@unique([profileId, name])
+  @@index([profileId, category, sortOrder])
+}
+
+model Experience {
+  id           Int       @id @default(autoincrement())
+  profileId    Int
+  company      String
+  position     String
+  location     String?
+  startDate    DateTime  @db.Date
+  /// null — работает по настоящее время
+  endDate      DateTime? @db.Date
+  achievements String[]
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  /// Технологии, использованные на позиции
+  skills  Skill[]
+
+  @@index([profileId, startDate])
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  profileId   Int
+  name        String
+  description String
+  /// Закрытые коммерческие проекты не имеют публичной ссылки
+  url         String?
+  sortOrder   Int     @default(0)
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  skills  Skill[]
+
+  @@index([profileId, sortOrder])
+}

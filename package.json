@@ -1,0 +1,59 @@
+{
+  "name": "danil-malkov-card",
+  "version": "1.0.0",
+  "description": "Цифровая визитка Данила Малькова — GraphQL backend на NestJS, Prisma и PostgreSQL",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prebuild": "prisma generate",
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:seed": "node dist/database/seed/run-seed.js",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "lint": "oxlint src/",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.5.2",
+    "@as-integrations/express5": "^1.1.2",
+    "@nestjs/apollo": "^14.2.1",
+    "@nestjs/common": "^12.6.0",
+    "@nestjs/config": "^12.1.1",
+    "@nestjs/core": "^12.6.0",
+    "@nestjs/graphql": "^14.2.1",
+    "@nestjs/platform-express": "^12.6.0",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "dataloader": "^2.2.3",
+    "dotenv": "^18.0.10",
+    "graphql": "^16.15.0",
+    "prisma": "7.10.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.15",
+    "@nestjs/schematics": "^12.0.16",
+    "@nestjs/testing": "^12.6.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.19.2",
+    "oxlint": "^1.95.0",
+    "prettier": "^3.10.1",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "@graphql-tools/utils": "^12.1.0"
+  }
+}

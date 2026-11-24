@@ -1,0 +1,18 @@
+# Render Blueprint: Dashboard -> New -> Blueprint -> выбрать репозиторий.
+services:
+  - type: web
+    name: danil-malkov-card
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: danil-malkov-card-db
+          property: connectionString
+
+databases:
+  - name: danil-malkov-card-db
+    plan: free
